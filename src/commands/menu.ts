@@ -2,19 +2,19 @@ import type {
   CommandInteraction,
   MessageActionRowComponentBuilder,
   SelectMenuInteraction,
-} from "discord.js";
-import { ActionRowBuilder, SelectMenuBuilder } from "discord.js";
-import { Discord, SelectMenuComponent, Slash } from "discordx";
+} from 'discord.js';
+import { ActionRowBuilder, SelectMenuBuilder } from 'discord.js';
+import { Discord, SelectMenuComponent, Slash } from 'discordx';
 
 const roles = [
-  { label: "Principal", value: "principal" },
-  { label: "Teacher", value: "teacher" },
-  { label: "Student", value: "student" },
+  { label: 'Principal', value: 'principal' },
+  { label: 'Teacher', value: 'teacher' },
+  { label: 'Student', value: 'student' },
 ];
 
 @Discord()
 export class Example {
-  @SelectMenuComponent({ id: "role-menu" })
+  @SelectMenuComponent({ id: 'role-menu' })
   async handle(interaction: SelectMenuInteraction): Promise<unknown> {
     await interaction.deferReply();
 
@@ -23,25 +23,25 @@ export class Example {
 
     // if value not found
     if (!roleValue) {
-      return interaction.followUp("invalid role id, select again");
+      return interaction.followUp('invalid role id, select again');
     }
 
     await interaction.followUp(
       `you have selected role: ${
-        roles.find((r) => r.value === roleValue)?.label ?? "unknown"
+        roles.find((r) => r.value === roleValue)?.label ?? 'unknown'
       }`
     );
     return;
   }
 
-  @Slash({ description: "roles menu", name: "my_roles" })
+  @Slash({ description: 'roles menu', name: 'my_roles' })
   async myRoles(interaction: CommandInteraction): Promise<unknown> {
     await interaction.deferReply();
 
     // create menu for roles
     const menu = new SelectMenuBuilder()
       .addOptions(roles)
-      .setCustomId("role-menu");
+      .setCustomId('role-menu');
 
     // create a row for message actions
     const buttonRow =
@@ -52,7 +52,7 @@ export class Example {
     // send it
     interaction.editReply({
       components: [buttonRow],
-      content: "select your role!",
+      content: 'select your role!',
     });
     return;
   }
