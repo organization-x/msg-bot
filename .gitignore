@@ -1,10 +1,12 @@
-# files
+**/node_modules
+node_modules
 .vscode
+**/build
+**/prisma/generated
 .env
 .env.local
 package-lock.json
 yarn.lock
-
-# folders
-build
-node_modules
+*.db
+*.db-journal
+*.log

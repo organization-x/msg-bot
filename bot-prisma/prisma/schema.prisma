@@ -1,0 +1,22 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Channel {
+  channelId BigInt @id @unique
+  roleId    BigInt @unique
+  Notes     Note[]
+}
+
+model Note {
+  id       Int      @id @default(autoincrement())
+  message  String
+  sentAt   DateTime @default(now())
+  channel  Channel  @relation(fields: [authorId], references: [channelId])
+  authorId BigInt
+}
