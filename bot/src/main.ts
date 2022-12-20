@@ -1,35 +1,10 @@
 import { dirname, importx } from '@discordx/importer';
-import type { Interaction, Message } from 'discord.js';
+import { Interaction, Message, TextChannel } from 'discord.js';
 import { IntentsBitField } from 'discord.js';
 import { Client } from 'discordx';
-
 import { prisma } from 'bot-prisma';
 
-async function main() {
-  const channel = await prisma.channel.create(
-    {
-      data: {
-        channelId: 1053798736448475156,
-        roleId: 1054047013043445890
-      }
-    }
-  );
-  
-  console.log(channel);
-}
-
-main()
-  .then(async () => {
-    await prisma.$disconnect()
-  })
-  .catch(async (e) => {
-    console.error(e)
-    await prisma.$disconnect()
-    process.exit(1)
-  })
-
 export const bot = new Client({
-  // Discord intents
   intents: [
     IntentsBitField.Flags.Guilds,
     IntentsBitField.Flags.GuildMembers,
@@ -37,11 +12,7 @@ export const bot = new Client({
     IntentsBitField.Flags.GuildMessageReactions,
     IntentsBitField.Flags.GuildVoiceStates,
   ],
-
-  // Debug logs are disabled in silent mode
-  silent: false,
-
-  // Configuration for @SimpleCommand
+  silent: process.env.DEBUG === 'true',
   simpleCommand: {
     prefix: '!',
   },
@@ -58,6 +29,22 @@ bot.once('ready', async () => {
   //  await bot.clearApplicationCommands(
   //    ...bot.guilds.cache.map((g) => g.id)
   //  );
+
+  setInterval(async () => {
+    const channels = await prisma.channel.findMany();
+
+    for(let channel of channels) {
+      const channelObj = await bot.channels.fetch(String(channel.channelId)) as TextChannel;
+
+      const message = channelObj.send(`<@&${ channel.roleId }> Please send your daily updates here!`);
+
+      (await message).startThread(
+        {
+          name: `${ (new Date()).toLocaleDateString('en-US').replaceAll('/', '-') } daily updates`
+        }
+      );
+    }
+  }, 5000); // 8.64e+7
 
   console.log('Bot started');
 });
