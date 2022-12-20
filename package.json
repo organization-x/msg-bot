@@ -6,7 +6,7 @@
   "repository": "https://github.com/organization-x/msg-bot.git",
   "license": "MIT",
   "workspaces": [
-    "bot/*",
-    "bot-prisma/*"
+    "bot-prisma",
+    "bot"
   ]
 }

@@ -5,6 +5,29 @@ import { Client } from 'discordx';
 
 import { prisma } from 'bot-prisma';
 
+async function main() {
+  const channel = await prisma.channel.create(
+    {
+      data: {
+        channelId: 1053798736448475156,
+        roleId: 1054047013043445890
+      }
+    }
+  );
+  
+  console.log(channel);
+}
+
+main()
+  .then(async () => {
+    await prisma.$disconnect()
+  })
+  .catch(async (e) => {
+    console.error(e)
+    await prisma.$disconnect()
+    process.exit(1)
+  })
+
 export const bot = new Client({
   // Discord intents
   intents: [

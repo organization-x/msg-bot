@@ -1,6 +1,6 @@
 {
-  "name": "msg-bot",
-  "version": "0.0.0",
+  "name": "bot",
+  "version": "1.0.0",
   "private": true,
   "license": "MIT",
   "type": "module",
@@ -15,7 +15,8 @@
   "dependencies": {
     "@discordx/importer": "^1.1.10",
     "@discordx/pagination": "^3.3.1",
-    "bot-prisma": "workspace:*",
+    "cross-env": "5.0.5",
+    "bot-prisma": "1.0.0",
     "discord.js": "^14.7.1",
     "discordx": "^11.5.2"
   },
