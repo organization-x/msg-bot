@@ -3,7 +3,7 @@ node_modules
 .vscode
 **/build
 **/prisma/generated
-.env
+
 .env.local
 package-lock.json
 yarn.lock
