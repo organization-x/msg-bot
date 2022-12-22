@@ -9,8 +9,9 @@ CREATE TABLE "Note" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "message" TEXT NOT NULL,
     "sentAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "channelId" BIGINT NOT NULL,
     "authorId" BIGINT NOT NULL,
-    CONSTRAINT "Note_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "Channel" ("channelId") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "Note_channelId_fkey" FOREIGN KEY ("channelId") REFERENCES "Channel" ("channelId") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateIndex

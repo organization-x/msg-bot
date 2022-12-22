@@ -10,13 +10,14 @@ datasource db {
 model Channel {
   channelId BigInt @id @unique
   roleId    BigInt @unique
-  Notes     Note[]
+  notes     Note[]
 }
 
 model Note {
   id       Int      @id @default(autoincrement())
   message  String
-  sentAt   DateTime @default(now())
-  channel  Channel  @relation(fields: [authorId], references: [channelId])
+  sentAt   DateTime @default(now()) 
+  channel  Channel  @relation(fields: [channelId], references: [channelId])
+  channelId BigInt
   authorId BigInt
 }

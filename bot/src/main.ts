@@ -2,6 +2,7 @@ import { dirname, importx } from '@discordx/importer';
 import { Interaction, Message, TextChannel } from 'discord.js';
 import { IntentsBitField } from 'discord.js';
 import { Client } from 'discordx';
+
 import { prisma } from 'bot-prisma';
 
 export const bot = new Client({
@@ -19,7 +20,6 @@ export const bot = new Client({
 });
 
 bot.once('ready', async () => {
-  // Synchronize applications commands with Discord
   await bot.initApplicationCommands();
 
   // To clear all guild commands, uncomment this line,
@@ -41,11 +41,8 @@ bot.once('ready', async () => {
       let pstOffset = -8;
       let offset = pstOffset - localOffset;
       let date = new Date( new Date().getTime() + offset * 3600 * 1000)
-
-      console.log(date);
-
-
-      // if(date.getHours() === 7)
+      
+      if(date.getHours() !== 9) return;
 
       let message;
 
@@ -58,13 +55,50 @@ bot.once('ready', async () => {
         }
       );
     }
-  }, 2000); // repeat every hour 3.6e+6
+  }, 3.6e+6); // repeat every hour
 
   console.log('Bot started');
 });
 
-bot.on('interactionCreate', (interaction: Interaction) => {
+bot.on('interactionCreate', async (interaction: Interaction) => {
   bot.executeInteraction(interaction);
+
+  if(interaction.isModalSubmit()) {
+    const getChannel = await prisma.channel.findUnique(
+      {
+        where: {
+          channelId: BigInt(interaction.channelId!)
+        }
+      }
+    );
+
+    const userNote = await prisma.note.create(
+      {
+        data: {
+          message: interaction.fields.fields.get('updateInput')!.value,
+          authorId: BigInt(interaction.user.id),
+          channelId: getChannel!.channelId
+        }
+      }
+    );
+
+    await prisma.channel.update(
+      {
+        where: {
+          channelId: getChannel!.channelId
+        },
+        data: {
+          notes: {
+            connect: {
+              id: userNote.id
+            }
+          }
+        }
+      }
+    );
+
+    await interaction.reply('Your note has been added to the database!');
+  }
 });
 
 bot.on('messageCreate', (message: Message) => {
