@@ -35,8 +35,22 @@ bot.once('ready', async () => {
 
     for(let channel of channels) {
       const channelObj = await bot.channels.fetch(String(channel.channelId)) as TextChannel;
+      
+      let today = new Date();
+      let localOffset = -(today.getTimezoneOffset() / 60);
+      let pstOffset = -8;
+      let offset = pstOffset - localOffset;
+      let date = new Date( new Date().getTime() + offset * 3600 * 1000)
 
-      const message = channelObj.send(`<@&${ channel.roleId }> Please send your daily updates here!`);
+      console.log(date);
+
+
+      // if(date.getHours() === 7)
+
+      let message;
+
+      if(date.getDay() !== 0 && date.getDay() !== 6) message = channelObj.send(`<@&${ channel.roleId }> Please send your daily updates here!`);
+      else message = channelObj.send('Please send your daily updates here!');
 
       (await message).startThread(
         {
@@ -44,7 +58,7 @@ bot.once('ready', async () => {
         }
       );
     }
-  }, 5000); // 8.64e+7
+  }, 2000); // repeat every hour 3.6e+6
 
   console.log('Bot started');
 });
